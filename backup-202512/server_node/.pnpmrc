@@ -1,0 +1,22 @@
+# pnpm 配置文件
+
+# 使用严格的对等依赖检查
+strict-peer-dependencies=false
+
+# 自动安装对等依赖
+auto-install-peers=true
+
+# 保存确切的版本号
+save-exact=false
+
+# 启用 shell 仿真
+shell-emulator=true
+
+# 禁用工作区协议
+enable-pre-post-scripts=true
+
+# 网络超时时间
+network-timeout=300000
+
+# 启用进度条
+progress=true

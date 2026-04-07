@@ -1,0 +1,6 @@
+{
+  "max_data_points": 1000,
+  "update_rate": 2,
+  "image_update_rate": 2000,
+  "recognition_timeout": 5000
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置 - 智能家居</title>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>🏠 智能家居</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">📊 仪表板</a></li>
+                <li><a href="/face" class="nav-link">👤 人脸系统</a></li>
+                <li><a href="/settings" class="nav-link">⚙️ 设置</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="usernameDisplay">用户</span>
+                <button id="logoutBtn" class="btn btn-logout">登出</button>
+            </div>
+        </nav>
+
+        <div class="settings-section">
+            <h2>⚙️ 系统设置</h2>
+            
+            <div class="settings-container">
+                <div class="settings-card">
+                    <h3>📊 数据设置</h3>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label for="maxDataPoints">最大数据保存数量</label>
+                            <input type="number" id="maxDataPoints" min="10" max="10000" value="1000">
+                            <small>建议值：500-2000</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateRate">自动更新间隔 (秒)</label>
+                            <input type="number" id="updateRate" min="1" max="300" value="5">
+                            <small>1-300秒之间，建议5-30秒</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUpdateRate">图像获取频率 (毫秒)</label>
+                            <input type="number" id="imageUpdateRate" min="100" max="10000" value="1000" step="100">
+                            <small>100-10000毫秒之间，建议500-2000毫秒</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="recognitionTimeout">人脸识别超时时间 (毫秒)</label>
+                            <input type="number" id="recognitionTimeout" min="1000" max="60000" value="5000" step="1000">
+                            <small>1000-60000毫秒之间，默认5000毫秒（5秒），超时后自动停止识别</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">💾 保存设置</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>📈 图表设置</h3>
+                    <form id="chartSettingsForm">
+                        <div class="form-group">
+                            <label for="chartSmoothness">曲线平滑度</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="chartSmoothness" min="0" max="0.5" step="0.1" value="0.1">
+                                <span id="smoothnessValue" style="min-width: 40px;">0.1</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pointSize">数据点大小</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="pointSize" min="0" max="8" step="1" value="2">
+                                <span id="pointSizeValue" style="min-width: 40px;">2</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="showGrid" checked> 
+                                <span style="margin-left: 8px;">显示网格线</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="showPoints" checked> 
+                                <span style="margin-left: 8px;">显示数据点</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="fillArea" checked> 
+                                <span style="margin-left: 8px;">填充区域</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-success">✨ 应用设置</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>🔄 数据控制</h3>
+                    <div class="form-group">
+                        <button id="refreshBtn" class="btn">🔄 刷新数据</button>
+                    </div>
+                    <div class="form-group">
+                        <button id="clearDataBtn" class="btn btn-danger">🗑️ 清空数据</button>
+                        <small style="display: block; margin-top: 8px; color: var(--danger-color);">警告：此操作不可恢复！</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义脚本 -->
+    <script src="/js/navigation.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

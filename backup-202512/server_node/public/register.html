@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 智能家居传感器监控</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>🏠 智能家居传感器监控</h1>
+            <h2>用户注册</h2>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required autocomplete="username" placeholder="至少3个字符" minlength="3">
+                    <small class="form-hint">用户名至少需要3个字符</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="至少6个字符" minlength="6">
+                    <small class="form-hint">密码至少需要6个字符</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password" placeholder="请再次输入密码">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">邮箱（可选）</label>
+                    <input type="email" id="email" name="email" autocomplete="email" placeholder="请输入邮箱地址">
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">注册</button>
+                </div>
+                
+                <div class="form-group">
+                    <p class="auth-link">
+                        已有账号？<a href="/login">立即登录</a>
+                    </p>
+                </div>
+            </form>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 检查是否已登录
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await fetch('/api/user', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (response.ok) {
+                        window.location.href = '/';
+                        return;
+                    }
+                } catch (error) {
+                    // 忽略错误，继续注册流程
+                }
+            }
+        }
+
+        // 注册表单提交
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const email = document.getElementById('email').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // 隐藏消息
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            successDiv.style.display = 'none';
+            successDiv.textContent = '';
+            
+            // 验证密码匹配
+            if (password !== confirmPassword) {
+                errorDiv.textContent = '两次输入的密码不一致';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // 禁用提交按钮
+            submitBtn.disabled = true;
+            submitBtn.textContent = '注册中...';
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password, email })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // 显示成功信息
+                    successDiv.textContent = '注册成功！正在跳转到登录页面...';
+                    successDiv.style.display = 'block';
+                    
+                    // 2秒后跳转到登录页面
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    // 显示错误信息
+                    errorDiv.textContent = result.error || '注册失败，请重试';
+                    errorDiv.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '注册';
+                }
+            } catch (error) {
+                errorDiv.textContent = '网络错误，请检查连接后重试';
+                errorDiv.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '注册';
+            }
+        });
+
+        // 页面加载时检查认证状态
+        checkAuth();
+    </script>
+</body>
+</html>
+

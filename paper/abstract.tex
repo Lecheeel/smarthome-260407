@@ -1,0 +1,27 @@
+% 摘要和关键词
+
+\begin{abstract}
+{\zihao{-4}\setstretch{1.5}
+\par 随着物联网、边缘计算与端侧智能的发展，智能家居系统正由“单点控制”向“多源感知—边缘处理—平台服务—自然交互”的一体化形态演进。在家庭场景中，环境舒适性与空气健康需求要求系统具备连续感知与可视化能力，而访问控制、隐私安全与交互便捷性又对本地智能与可靠通信提出更高要求。围绕上述问题，本文设计并实现了一套端边云协同的智能家居原型系统。
+\par 本文的研究内容包括多传感器环境监测、边缘视觉识别、平台化数据服务与语音交互。系统采用分层与模块化架构：底层以STM32作为采集节点，完成温湿度、气压与VOC等环境参数采集，并以结构化串口协议上报至网关；网关层以ESP32-S3为核心，完成数据融合、气体传感器采样、TFT本地显示、WiFi联网与HTTP数据上报，同时基于MQTT实现指令下发与状态回传；视觉侧引入OpenMV实现端侧人脸采集与识别，支持识别结果上报与图像获取；平台侧基于Node.js实现数据接收、用户登录鉴权、历史数据管理与统计接口，并通过Web页面实现多参数曲线展示与人脸系统交互；交互侧实现语音助手子系统，采用“ASR—LLM—TTS”流水线与工具调用机制，将自然语言意图映射为受控接口请求，实现环境信息查询等任务的语音交互。
+\par 实现与联调结果表明，该系统能够稳定完成多传感器数据采集、网络上传与网页端可视化展示，控制链路能够支持对人脸系统的采集、识别、状态查询与图像获取等操作。本文的创新点体现在分层协作的端边云架构设计、多协议（UART/HTTP/MQTT）一体化集成、端侧人脸识别与平台联动，以及面向智能家居场景的LLM工具调用式语音交互方案。本文工作可为电子信息工程专业在嵌入式系统设计、通信协议集成、边缘智能与人机交互方向的综合实践提供参考。
+}
+\end{abstract}
+
+{\zihao{-4}\setstretch{1.5}
+\noindent\textbf{关键词：}智能家居；STM32；ESP32-S3；环境监测；端边云协同；人脸识别；语音助手；MQTT；Node.js
+}
+
+\vspace{0.5\baselineskip}
+\newpage
+{\zihao{-4}\setstretch{1.5}
+\begin{center}
+\textbf{Abstract}
+\end{center}
+\par With the development of the Internet of Things, edge computing, and on-device intelligence, smart home systems are evolving from single-point control to an integrated paradigm featuring multi-source sensing, edge processing, platform services, and natural interaction. In home scenarios, continuous environmental sensing and visualization are required for comfort and air-quality awareness, while access control, privacy protection, and convenient interaction demand reliable local intelligence and robust communication. To address these needs, this work designs and implements a smart home prototype based on an edge--cloud collaborative architecture.
+\par The research focuses on multi-sensor environmental monitoring, edge-side vision recognition, platform-oriented data services, and voice interaction. A layered and modular design is adopted. At the device layer, an STM32 node collects environmental parameters including temperature, humidity, pressure, and VOC, and reports structured data to the gateway via a UART protocol. At the gateway layer, an ESP32-S3 performs data fusion, gas-sensor sampling, TFT local display, Wi-Fi connectivity, and HTTP data uploading, while MQTT is used for command delivery and status feedback. On the vision side, OpenMV enables on-device face collection and recognition with support for recognition reporting and image retrieval. On the platform side, a Node.js server provides data ingestion, user authentication, historical data management, and statistical APIs, together with web pages for multi-parameter visualization and face-system operations. In addition, a voice assistant subsystem is implemented using an ASR--LLM--TTS pipeline with tool calling, which maps natural-language intents to controlled API requests for tasks such as environmental information queries.
+\par Implementation and integration results show that the system can stably perform periodic data acquisition, network uploading, and web-based visualization, and that the control chain supports face-system operations including collection, recognition, status querying, and image retrieval. The main innovations include the layered edge--cloud collaborative architecture, integrated multi-protocol communication (UART/HTTP/MQTT), edge-side face recognition with platform linkage, and an LLM tool-calling based voice interaction scheme for smart home scenarios.
+\par\noindent\textbf{Key words:} smart home; STM32; ESP32-S3; environmental monitoring; edge--cloud collaboration; face recognition; voice assistant; MQTT; Node.js
+}
+
+\newpage

@@ -1,0 +1,11 @@
+# 语音助手依赖
+dashscope>=1.20.0
+openai>=1.0.0
+sounddevice>=0.4.6
+numpy>=1.24.0
+
+# 天气API客户端依赖
+requests>=2.31.0
+PyJWT>=2.8.0
+cryptography>=41.0.0
+

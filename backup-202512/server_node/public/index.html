@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能家居传感器监控</title>
+    <script>
+        // 重定向到仪表板页面
+        window.location.href = '/dashboard';
+    </script>
+    <!-- 第三方库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+    <!-- tracking.js 用于真实人脸检测（纯JavaScript，不依赖WebGL） -->
+    <script src="https://cdn.jsdelivr.net/npm/tracking@1.1.3/build/tracking-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tracking@1.1.3/build/data/face-min.js"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-bar">
+            <h1>🏠 智能家居传感器监控</h1>
+            <div class="user-info">
+                <span id="usernameDisplay">用户</span>
+                <button id="logoutBtn" class="btn btn-logout">登出</button>
+            </div>
+        </div>
+
+        <div id="connectionStatus" class="status disconnected">
+            <span>🔌</span>
+            <span>连接状态: 检查中...</span>
+        </div>
+
+        <div class="data-info">
+            <div class="update-indicator" id="updateIndicator"></div>
+            <p><strong>📊 数据统计:</strong> <span id="totalDataPoints">0</span> 个数据点</p>
+            <p><strong>🕐 最后更新:</strong> <span id="lastUpdate">从未</span></p>
+        </div>
+
+        <div class="stats" id="statsContainer">
+            <!-- 统计卡片将在这里动态生成 -->
+        </div>
+
+        <div class="controls">
+            <div class="control-card">
+                <h3>⚙️ 系统设置</h3>
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label for="maxDataPoints">最大数据保存数量</label>
+                        <input type="number" id="maxDataPoints" min="10" max="10000" value="1000">
+                        <small>建议值：500-2000</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateRate">自动更新间隔 (秒)</label>
+                        <input type="number" id="updateRate" min="1" max="300" value="5">
+                        <small>1-300秒之间，建议5-30秒</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUpdateRate">图像获取频率 (毫秒)</label>
+                        <input type="number" id="imageUpdateRate" min="100" max="10000" value="1000" step="100">
+                        <small>100-10000毫秒之间，建议500-2000毫秒</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="recognitionTimeout">人脸识别超时时间 (毫秒)</label>
+                        <input type="number" id="recognitionTimeout" min="1000" max="60000" value="5000" step="1000">
+                        <small>1000-60000毫秒之间，默认5000毫秒（5秒），超时后自动停止识别</small>
+                    </div>
+                    <button type="submit" class="btn">💾 保存设置</button>
+                </form>
+            </div>
+
+            <div class="control-card">
+                <h3>🔄 数据控制</h3>
+                <div class="form-group">
+                    <button id="refreshBtn" class="btn">🔄 刷新数据</button>
+                </div>
+                <div class="form-group">
+                    <button id="clearDataBtn" class="btn btn-logout">🗑️ 清空数据</button>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <h3>📊 图表设置</h3>
+                <form id="chartSettingsForm">
+                    <div class="form-group">
+                        <label for="chartSmoothness">曲线平滑度</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="chartSmoothness" min="0" max="0.5" step="0.1" value="0.1">
+                            <span id="smoothnessValue" style="min-width: 40px;">0.1</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pointSize">数据点大小</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="pointSize" min="0" max="8" step="1" value="2">
+                            <span id="pointSizeValue" style="min-width: 40px;">2</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="showGrid" checked> 
+                            <span style="margin-left: 8px;">显示网格线</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="showPoints" checked> 
+                            <span style="margin-left: 8px;">显示数据点</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="fillArea" checked> 
+                            <span style="margin-left: 8px;">填充区域</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-success">✨ 应用设置</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 人脸管理系统 -->
+        <div class="face-system-section">
+            <h2>👤 智能家居人脸系统</h2>
+            
+            <div class="face-system-container">
+                <!-- 左侧：控制面板 -->
+                <div class="face-control-panel">
+                    <div class="face-control-card">
+                        <h3>🎯 系统状态</h3>
+                        <div id="faceSystemStatus" class="face-status">当前模式: idle</div>
+                        <div id="faceSystemMessage" class="face-status-message"></div>
+                        <div id="collectProgress"></div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📸 人脸收集</h3>
+                        <form id="collectFaceForm" class="face-form">
+                            <div class="form-group">
+                                <label for="collectName">姓名（仅英文）</label>
+                                <input type="text" id="collectName" placeholder="例如: John" pattern="[a-zA-Z]+" required>
+                                <small>请输入纯英文名字，用于标识人脸</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">开始收集</button>
+                        </form>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>🔍 人脸识别</h3>
+                        <div class="form-group">
+                            <button id="startRecognizeBtn" class="btn btn-success">开始识别</button>
+                            <button id="stopBtn" class="btn btn-warning">停止操作</button>
+                        </div>
+                        <div class="form-group">
+                            <button id="getImageBtn" class="btn">📷 获取当前图像</button>
+                        </div>
+                        <div class="form-group">
+                            <button id="clearRecognitionResultsBtn" class="btn btn-small">🗑️ 清除识别记录</button>
+                        </div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📊 识别结果</h3>
+                        <div id="recognitionResults" class="recognition-results">
+                            <p class="no-faces">暂无识别结果</p>
+                        </div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📋 人脸管理</h3>
+                        <div class="form-group">
+                            <button id="refreshFacesBtn" class="btn">🔄 刷新列表</button>
+                        </div>
+                        <div id="facesList" class="faces-list">
+                            <p class="no-faces">加载中...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：图像显示 -->
+                <div class="face-image-panel">
+                    <div class="face-control-card">
+                        <h3>📷 实时图像</h3>
+                        <div id="faceImageContainer" class="face-image-container">
+                            <p class="no-image">暂无图像</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts">
+            <div class="chart-container">
+                <h2>🌡️ 温度趋势</h2>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>💧 湿度趋势</h2>
+                <canvas id="humidityChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>📊 气压趋势</h2>
+                <canvas id="pressureChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>🌿 VOC指数趋势</h2>
+                <canvas id="vocChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>🔥 MQ传感器趋势</h2>
+                <canvas id="mqSensorChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义脚本 -->
+    <script src="/js/chart.js"></script>
+    <script src="/js/faceSystem.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

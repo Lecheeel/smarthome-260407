@@ -1,0 +1,209 @@
+% 毕业设计答辩手册（简明问答版）
+% 使用 XeLaTeX 编译：xelatex defense_handbook.tex
+
+\documentclass[11pt,a4paper]{ctexart}
+
+\usepackage[top=2.2cm,bottom=2.2cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.38}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}[AutoFakeBold=true]
+
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+% 主题色（须在 hyperref 之前定义，供书签等使用）
+\definecolor{TitleBlue}{RGB}{25,84,140}
+\definecolor{BoxBg}{RGB}{248,251,255}
+\definecolor{BoxFrame}{RGB}{180,200,230}
+\definecolor{QColor}{RGB}{35,90,150}
+
+\usepackage{hyperref}
+
+% 章节标题（不用 titlerule 可选参数，避免与 titlesec 冲突）
+\titleformat{\section}{\Large\bfseries\color{TitleBlue}}{\thesection、}{0.45em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.65em}
+
+% 问答盒子
+\newtcolorbox{qabox}[1][]{
+  enhanced,
+  colback=BoxBg,
+  colframe=BoxFrame,
+  boxrule=0.6pt,
+  arc=2pt,
+  left=10pt,right=10pt,top=8pt,bottom=8pt,
+  #1
+}
+
+\newcommand{\答辩问}[1]{\par\noindent\textbf{\color{QColor}【问】}#1\par\vspace{0.35em}}
+\newcommand{\答辩答}[1]{\noindent\textbf{【答】}#1\par}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gray}毕业设计答辩手册}
+\fancyhead[R]{\small\color{gray}简明问答}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{colorlinks=true,linkcolor=TitleBlue,urlcolor=TitleBlue}
+
+\title{\vspace{-1em}{\Huge\bfseries\color{TitleBlue}毕业设计答辩手册}\\[0.6em]
+\large 智能家居环境监测与人脸、语音子系统——常见问题与简明回答}
+\author{（请填写姓名、学号、指导教师）}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{center}
+\fbox{\parbox{0.92\linewidth}{
+\textbf{使用说明：}本手册面向答辩现场\textbf{口语化、短句化}回答，避免堆砌术语。老师若追问细节，可再结合论文中的图表与数据补充。回答时语速放慢，先讲``做什么''，再讲``怎么连起来''。}}
+\end{center}
+
+\vspace{0.8em}
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------
+\section{系统整体：是干什么的、有几块？}
+
+\begin{qabox}
+\答辩问{你的毕业设计到底解决什么问题？一句话怎么说？}
+\答辩答{做一个\textbf{能看家里环境数据、能做人脸相关操作、还能语音问情况}的智能家居小系统。传感器测温湿度、气压、有害气体等，数据能在网页上画曲线；摄像头那端做人脸采集和识别；另外加了一个语音助手，用说话的方式查环境或天气。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{系统大致分几层？谁负责什么？}
+\答辩答{可以想成三层：\textbf{最底下}是采集和现场——STM32 管多路传感器，ESP32 当``网关''汇总数据、接屏幕、上网；\textbf{中间}是家里的视觉模块 OpenMV，专门做人脸；\textbf{上面}是电脑或云上的服务器，用网页把数据存起来、画出来，语音助手也通过接口访问这些数据。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{为什么既要 STM32 又要 ESP32，一个不够吗？}
+\答辩答{分工不同：STM32 适合\textbf{稳定、快速地采传感器}；ESP32 自带\textbf{WiFi 和较强算力}，适合做本地小屏幕显示、把数据打包发到服务器，还能同时处理串口上来的多路数据。相当于一个专心测、一个专心连网和展示，结构清晰。}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{主控之间怎么通信？（最常问）}
+
+\begin{qabox}
+\答辩问{你这几个主控/模块之间是怎么通信的？}
+\答辩答{可以分两类线：\textbf{``有线、近距离''}用串口——STM32 和 ESP32 用杜邦线连 TX/RX，按约定好的格式发温湿度等数据；OpenMV 和 ESP32 也是串口，传文字命令和小图片。\textbf{``无线上网''}用 WiFi——ESP32 把汇总好的数据用 HTTP 发到服务器；需要\textbf{远程发指令、收简短状态}时用 MQTT（像给设备订阅的``消息频道''）。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{串口大概是什么？为什么用串口？}
+\答辩答{串口就是两根数据线交叉连（一发一收），像\textbf{一根窄窄的管道}一点点传数据。优点是\textbf{简单、延迟低、容易调试}，适合板子紧挨着放。缺点是要接线、距离不能太远，所以只适合设备旁边。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{HTTP 和 MQTT 都在用，有什么区别？}
+\答辩答{\textbf{HTTP}像``问一句答一句''——ESP32 定时把一包传感器数据 POST 给服务器，适合\textbf{上传历史曲线}。\textbf{MQTT}像``订阅公众号''——手机和服务器都能往某个主题发短消息，设备订阅了就能收到\textbf{控制命令或状态}，消息小、开销低，适合\textbf{联动和遥控}。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{数据从传感器到网页，中间走什么路径？}
+\答辩答{传感器 → STM32 读数 → 串口给 ESP32 → ESP32 打包 → WiFi 用 HTTP 发到 Node 服务器 → 服务器存成文件或内存里的记录 → 浏览器访问网页，网页用接口把数据拉下来画曲线。老师如果只听流程，记住\textbf{串口进网关、网关上网、服务器给网页}就够了。}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{服务器、网页与数据库}
+
+\begin{qabox}
+\答辩问{服务器用的是什么技术？}
+\答辩答{用的是 \textbf{Node.js} 搭的一个轻量网站，提供静态页面和接口。传感器上传、用户登录、图表设置、和人脸相关的接口都在这个服务里。对老师可以说成``用 JavaScript 写的一个后台小网站''。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{数据存在哪里？算不算数据库？}
+\答辩答{本设计里大量数据以\textbf{JSON 文件}等形式放在服务器本地，配合内存里的缓存，够用、实现快。若老师问``为什么不用 MySQL''，可以答：原型阶段优先\textbf{简单可靠}，正式产品可换成真正的数据库并做备份。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{网页上怎么保证不是谁都能看？}
+\答辩答{有\textbf{登录注册}，后台给会话 token，接口要带上 token 才返回数据。可以一句话说：``和普通网站登录类似，没登录只能进登录页。''}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{OpenMV 与人脸部分}
+
+\begin{qabox}
+\答辩问{人脸识别是在摄像头板子上做还是电脑上做？}
+\答辩答{主要在人脸摄像头那块板子（OpenMV）上完成采集和识别，\textbf{结果再通过 ESP32 传到服务器}，网页可以查看状态或取图。这样减轻服务器压力，也符合``边缘侧先处理''的思路。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{人脸数据隐私你怎么考虑？}
+\答辩答{识别在本地模块完成，敏感操作尽量\textbf{不裸奔到公网}；演示环境也要注意账号密码。正式部署应加\textbf{传输加密、访问权限细分}，这是后续改进点。}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{语音助手子系统}
+
+\begin{qabox}
+\答辩问{语音助手是怎么工作的？不用讲代码。}
+\答辩答{可以想成四步：\textbf{麦克风}收到声音 → \textbf{语音识别}变成文字 → \textbf{大模型}理解要问什么，必要时调用``工具''去查传感器接口或天气 → \textbf{语音合成}播出来。用户感觉就像和智能音箱对话。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{大模型在系统里起什么作用？}
+\答辩答{主要起\textbf{听懂自然语言、决定调用哪个接口}的作用。比如用户说``客厅温度多少''，模型把意图对应到查询环境数据的函数，而不是手写几百条 if--else。}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{创新点、难点与展望（收尾常用）}
+
+\begin{qabox}
+\答辩问{你的创新点在哪里？}
+\答辩答{把\textbf{环境采集、边缘人脸、Web 可视化、语音对话}串成一条完整链路；通信上\textbf{串口 + HTTP + MQTT}分工明确；语音侧用\textbf{工具调用}把``说话''和``查数据''连起来。创新不必夸大，说清楚``做了一体化原型''即可。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{做的时候遇到的最大困难是什么？}
+\答辩答{（请结合个人经历二选一或组合）例如：\textbf{串口数据粘包、丢包}要定协议和超时；\textbf{WiFi 不稳定}要做重连；\textbf{多模块联调}要分段排查。回答时先说现象，再说你怎么定位、怎么解决，老师更看重\textbf{过程}。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{如果继续改进，你会加什么？}
+\答辩答{可以从三方面说：\textbf{安全}（HTTPS、设备证书）；\textbf{可靠}（数据库、断点续传）；\textbf{体验}（手机 App、更多家电联动）。不必全说，挑两条即可。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{这个系统的实用价值怎么说？}
+\答辩答{适合作为\textbf{家庭环境与健康关注}的入门监测方案，也可作为\textbf{物联网、边缘智能与语音交互}的教学或演示平台。真正进家庭还需工程化与安全加固。}
+\end{qabox}
+
+%----------------------------------------------------------------------
+\section{老师可能随口问的（短答即可）}
+
+\begin{qabox}
+\答辩问{你做实验或测试了吗？怎么说明``能用''？}
+\答辩答{做了\textbf{联调演示}：传感器有数、网页曲线能刷新、人脸流程能走通、语音能问到环境或天气。答辩时可以放几张截图或短视频，比纯讲更直观。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{系统会不会很卡、数据会不会乱？}
+\答辩答{板子上各任务\textbf{分时处理}，上传有间隔；串口通信定了格式和超时，减少乱码。若老师追问，可以说``原型阶段以稳定演示为主，量产会再加校验和重传''。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{成本高不高？}
+\答辩答{开发板、传感器、摄像头模块都是\textbf{常见教学级器件}，总价可控，适合毕业设计复现。若量产会考虑批量采购和外壳、电源等成本。}
+\end{qabox}
+
+\begin{qabox}
+\答辩问{你在这个项目里主要负责什么？（小组答辩时）}
+\答辩答{（请按实际填写）例如：总体方案、ESP32 与服务器联调、网页与 MQTT、或语音助手与接口对接。一句话：\textbf{从想法到能演示的一条链里，我具体做了哪几段}。}
+\end{qabox}
+
+\vspace{1em}
+\noindent\textcolor{gray}{\small 提示：``实用价值''若老师更关心能力培养，可补一句：综合锻炼了嵌入式、网络后台与系统联调能力。答辩时先结论、再展开，每条回答控制在约半分钟以内更易听清。}
+
+\end{document}

@@ -1,0 +1,120 @@
+# ========== 本地工具（勿提交二进制）==========
+pandoc.exe
+**/pandoc.exe
+
+# ========== 操作系统 ==========
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ========== 编辑器 / IDE ==========
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# VS Code：如需共享调试/任务配置可改为只忽略个人项
+# .vscode/
+
+# ========== Node.js（server_node 等）==========
+**/node_modules/
+.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+
+# ========== Python（smarthomellm1 等）==========
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+downloads/
+eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg
+pip-log.txt
+
+# 虚拟环境（任选其一）
+.venv/
+venv/
+ENV/
+env/
+
+# ========== PlatformIO（ESP32 / STM32）==========
+**/.pio/
+**/cmake-build-*/
+
+# 可选：忽略本地生成的 VS Code C++ 数据库（体积大）
+**/.vscode/.browse.c_cpp.db*
+**/.vscode/ipch
+
+# ========== LaTeX（根目录 paper、main.tex 等）==========
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.xdv
+/build/
+/paper/build/
+
+# ========== 服务端运行时数据（勿提交真实监测数据与账户）==========
+server_node/sensor_data.json
+server_node/users.json
+
+# 若 chart / settings 含个人偏好可取消下一行注释
+# server_node/settings.json
+# server_node/chart_settings.json
+
+# 语音助手本地记忆（路径与 smarthomellm1/.gitignore 一致）
+smarthomellm1/user_memory.json
+
+# ========== 环境变量与密钥文件 ==========
+.env
+.env.*
+!.env.example
+
+# ========== 日志与临时文件 ==========
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+.cache/
+
+# ========== 可选：含 MQTT/云 API 的本地配置 ==========
+# 若仓库需公开，建议只提交 server_config.example.json，并取消下一行注释：
+# server_node/server_config.json
+
+# ESP32 若将密钥移出 config.h，可在此加入本地头文件模式，例如：
+# smarthome_esp32/include/config.local.h
+
+*/.vscode/
+.vscode/
+*/.cursor/
+.cursor/
+*.doc*
+*.zip
+*.exe
+
+# 语音助手本地密钥（请用 config.example.py 复制为 config.py）
+smarthomellm1/voice_assistant/config.py

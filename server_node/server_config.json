@@ -1,0 +1,26 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 13501,
+    "debug": true
+  },
+  "data": {
+    "max_data_points": 1000,
+    "auto_cleanup": true
+  },
+  "api": {
+    "version": "v1",
+    "cors_enabled": true
+  },
+  "mqtt": {
+    "server": "",
+    "port": 1883,
+    "username": "mqttuser",
+    "password": "qawsed",
+    "client_id": "server_node",
+    "topic_command": "smarthome/command",
+    "topic_response": "smarthome/response",
+    "reconnect_interval": 5000,
+    "response_timeout": 5000
+  }
+}

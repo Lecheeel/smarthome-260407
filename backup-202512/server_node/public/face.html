@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人脸系统 - 智能家居</title>
+    <!-- tracking.js 用于真实人脸检测（纯JavaScript，不依赖WebGL） -->
+    <script src="https://cdn.jsdelivr.net/npm/tracking@1.1.3/build/tracking-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tracking@1.1.3/build/data/face-min.js"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>🏠 智能家居</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">📊 仪表板</a></li>
+                <li><a href="/face" class="nav-link">👤 人脸系统</a></li>
+                <li><a href="/settings" class="nav-link">⚙️ 设置</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="usernameDisplay">用户</span>
+                <button id="logoutBtn" class="btn btn-logout">登出</button>
+            </div>
+        </nav>
+
+        <div class="face-system-section">
+            <h2>👤 智能家居人脸系统</h2>
+            
+            <div class="face-system-container">
+                <!-- 左侧：控制面板 -->
+                <div class="face-control-panel">
+                    <div class="face-control-card">
+                        <h3>🎯 系统状态</h3>
+                        <div id="faceSystemStatus" class="face-status">当前模式: idle</div>
+                        <div id="faceSystemMessage" class="face-status-message"></div>
+                        <div id="collectProgress"></div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📸 人脸收集</h3>
+                        <form id="collectFaceForm" class="face-form">
+                            <div class="form-group">
+                                <label for="collectName">姓名（仅英文）</label>
+                                <input type="text" id="collectName" placeholder="例如: John" pattern="[a-zA-Z]+" required>
+                                <small>请输入纯英文名字，用于标识人脸</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">开始收集</button>
+                        </form>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>🔍 人脸识别</h3>
+                        <div class="form-group">
+                            <button id="startRecognizeBtn" class="btn btn-success">开始识别</button>
+                            <button id="stopBtn" class="btn btn-warning">停止操作</button>
+                        </div>
+                        <div class="form-group">
+                            <button id="getImageBtn" class="btn">📷 获取当前图像</button>
+                        </div>
+                        <div class="form-group">
+                            <button id="clearRecognitionResultsBtn" class="btn btn-small">🗑️ 清除识别记录</button>
+                        </div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📊 识别结果</h3>
+                        <div id="recognitionResults" class="recognition-results">
+                            <p class="no-faces">暂无识别结果</p>
+                        </div>
+                    </div>
+
+                    <div class="face-control-card">
+                        <h3>📋 人脸管理</h3>
+                        <div class="form-group">
+                            <button id="refreshFacesBtn" class="btn">🔄 刷新列表</button>
+                        </div>
+                        <div id="facesList" class="faces-list">
+                            <p class="no-faces">加载中...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：图像显示 -->
+                <div class="face-image-panel">
+                    <div class="face-control-card">
+                        <h3>📷 实时图像</h3>
+                        <div id="faceImageContainer" class="face-image-container">
+                            <p class="no-image">暂无图像</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义脚本 -->
+    <script src="/js/faceSystem.js"></script>
+    <script src="/js/navigation.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

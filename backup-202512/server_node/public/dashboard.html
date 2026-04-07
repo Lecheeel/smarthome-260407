@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表板 - 智能家居传感器监控</title>
+    <!-- 第三方库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>🏠 智能家居</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">📊 仪表板</a></li>
+                <li><a href="/face" class="nav-link">👤 人脸系统</a></li>
+                <li><a href="/settings" class="nav-link">⚙️ 设置</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="usernameDisplay">用户</span>
+                <button id="logoutBtn" class="btn btn-logout">登出</button>
+            </div>
+        </nav>
+
+        <div id="connectionStatus" class="status disconnected">
+            <span>🔌</span>
+            <span>连接状态: 检查中...</span>
+        </div>
+
+        <div class="data-info">
+            <div class="update-indicator" id="updateIndicator"></div>
+            <p><strong>📊 数据统计:</strong> <span id="totalDataPoints">0</span> 个数据点</p>
+            <p><strong>🕐 最后更新:</strong> <span id="lastUpdate">从未</span></p>
+        </div>
+
+        <div class="stats" id="statsContainer">
+            <!-- 统计卡片将在这里动态生成 -->
+        </div>
+
+        <div class="charts">
+            <div class="chart-container">
+                <h2>🌡️ 温度趋势</h2>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>💧 湿度趋势</h2>
+                <canvas id="humidityChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>📊 气压趋势</h2>
+                <canvas id="pressureChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>🌿 VOC指数趋势</h2>
+                <canvas id="vocChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>🔥 MQ传感器趋势</h2>
+                <canvas id="mqSensorChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义脚本 -->
+    <script src="/js/chart.js"></script>
+    <script src="/js/navigation.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

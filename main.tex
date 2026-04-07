@@ -1,0 +1,96 @@
+% 基于STM32/ESP32的智能家居系统设计与实现
+% 使用 XeLaTeX 编译
+
+\documentclass[12pt,a4paper]{ctexart}
+
+% 页面设置
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing % 1.5倍行距
+
+% 字体设置（XeLaTeX 支持）
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}  % 宋体
+
+% 数学公式
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% 图表支持
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% 代码支持
+\usepackage{listings}
+\usepackage{xcolor}
+
+% 超链接
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% 目录格式调整
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforesecskip}{2pt}  % 章节之间的间距
+\setlength{\cftbeforesubsecskip}{1pt}  % 子章节之间的间距
+\setlength{\cftparskip}{0pt}  % 段落间距
+
+% 页眉页脚
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{基于DeepSeek的智能家居环境监控系统}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+
+% 标题信息
+\title{基于DeepSeek的智能家居环境监控系统}
+\author{（待补充）}
+\date{\today}
+
+\begin{document}
+
+% 封面
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% 目录
+\tableofcontents
+\newpage
+
+% 摘要
+\input{paper/abstract}
+
+% 正文
+\input{paper/chapter01}
+\input{paper/chapter02}
+\input{paper/chapter03}
+\input{paper/chapter04}
+\input{paper/chapter05}
+\input{paper/chapter06}
+\input{paper/chapter07}
+\input{paper/chapter08}
+
+% 参考文献
+\input{paper/references}
+
+% 附录（不在目录中显示）
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+\input{paper/appendix}
+
+% 致谢
+\input{paper/acknowledgment}
+
+\end{document}
